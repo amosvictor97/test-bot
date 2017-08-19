@@ -32,7 +32,7 @@ class BotHandler:
 
 
 # utilisation
-token = "slks"
+token = "417944781:AAFV_u2ZZ--29rfeYh33kF2-Z9-nj4dv36Y"
 greet_bot = BotHandler(token)
 greetings = ('hello', 'hi', 'greetings', 'sup')
 now = datetime.datetime.now()
@@ -67,6 +67,5 @@ def main():
 
 if __name__ == '__main__':
     try:
-        main()
     except KeyboardInterrupt:
         exit()
