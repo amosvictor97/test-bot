@@ -1,1 +1,1 @@
-"web: python aaamos_bot.py" 
+web: python aaamos_bot.py 
