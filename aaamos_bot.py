@@ -12,7 +12,9 @@ class BotHandler:
             method = 'getUpdates'
             params = {'timeout': timeout, 'offset': offset}
             resp = requests.get(self.api_url + method, params)
-            result_json = resp.json()['result']
+            result_json = resp.json()['result']  # renvoi une liste
+            for elt in result_json:
+                print(elt)
             return result_json
 
     def send_message(self, chat_id, text):
@@ -26,8 +28,28 @@ class BotHandler:
             if len(get_result) > 0:
                 last_update = get_result[-1]
             else:
-                last_update = get_result[len(get_result)]
+                print("longueur du result")
+                print(len(get_result))
+                total_update = len(get_result)
+                print(total_update)
+                last_update = get_result[total_update]
             return last_update
+
+    def get_update_id(self):
+        id = self.get_updates()[-1]['update_id']
+        return id
+
+    def get_chat_text(self):
+        chat_text = self.get_updates()[-1]['message']['text']
+        return chat_text
+
+    def get_chat_id(self):
+        chat_id = self.get_updates()[-1]['message']['chat']['id']
+        return chat_id
+
+    def get_chat_name(self):
+        chat_name = self.get_updates()[-1]['message']['chat']['first_name']
+        return chat_name
 # fin definition de la classe
 
 
@@ -43,22 +65,32 @@ def main():
     today = now.day
     hour = now.hour
     while True:
-        greet_bot.get_updates(new_offset)
-        last_update = greet_bot.get_last_update()
-        last_update_id = last_update['update_id']
-        last_chat_text = last_update['message']['text']
-        last_chat_id = last_update['message']['chat']['id']
-        last_chat_name = last_update['message']['chat']['first_name']
+        print('execution loop')
+        updateId = greet_bot.get_update_id()
+        print('valeur du update id')
+        print(updateId)
+        last_update_id = updateId
+        last_chat_text = greet_bot.get_chat_text
+        last_chat_id = greet_bot.get_chat_id
+        last_chat_name = greet_bot.get_chat_name
 
-        if last_chat_text.lower() in greetings and today == now.day and 6 <= hour < 12:
+        # greet_bot.get_updates(new_offset)
+        # last_update = greet_bot.get_last_update()
+        #  last_update_id = last_update['update_id']
+        # last_update_id = updateId[-1]['update_id']
+        # last_chat_text = last_update['message']['text']
+        # last_chat_id = last_update['message']['chat']['id']
+        # last_chat_name = last_update['message']['chat']['first_name']
+
+        if last_chat_text in greetings and today == now.day and 6 <= hour < 12:
             greet_bot.send_message(last_chat_id, 'Morning  {}'
                                    .format(last_chat_name))
             today += 1
-        elif last_chat_text.lower() in greetings and today == now.day and 12 <= hour < 17:
+        elif last_chat_text in greetings and today == now.day and 12 <= hour < 17:
                     greet_bot.send_message(last_chat_id, 'Good Afternoon {}'
                                            .format(last_chat_name))
                     today += 1
-        elif last_chat_text.lower() in greetings and today == now.day and 17 <= hour < 23:
+        elif last_chat_text in greetings and today == now.day and 17 <= hour < 23:
                     greet_bot.send_message(last_chat_id, 'Good Evening  {}'
                                            .format(last_chat_name))
                     today += 1
@@ -67,5 +99,6 @@ def main():
 
 if __name__ == '__main__':
     try:
+        main()
     except KeyboardInterrupt:
         exit()
