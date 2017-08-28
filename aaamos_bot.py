@@ -13,6 +13,7 @@ class BotHandler:
             params = {'timeout': timeout, 'offset': offset}
             resp = requests.get(self.api_url + method, params)
             result_json = resp.json()['result']  # renvoi une liste
+            print(result_json)
             for elt in result_json:
                 print(elt)
             return result_json
